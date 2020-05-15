@@ -49,10 +49,11 @@ if not restr(dz, dt, L, C):
     print("Valores inválidos estipulados, modelo diverge")
 
 #Definição da corrente e tensão na malha
-I = np.zeros((lmax, tmax), np.float64)
-V = np.zeros((lmax, tmax), np.float64)
-V[0][0] = Rl3/(Rl3 + Rs)*vs1(0)
-I[0][0] = vs1(0)/(Rl3 + Rs)
+I = np.zeros((2*k, 2*n))
+V = np.zeros((2*k, 2*n))
+
+V[0][0:2*n] = Rl3/(Rl3 + Rs)*vs1(0)
+I[0][0:2*n] = vs1(0)/(Rl3 + Rs)
 
 #Definição dos c's usados nas fórmulas
 c1 = -(2*dt)/(dt*dz*R + 2*dz*L)
@@ -61,10 +62,11 @@ c3 = -(2*dt)/(dt*dz*G + 2*dz*C)
 c4 = (2*C - dt*G)/(2*C + dt*G)
 
 #Definição das fórmulas pelo método FDTD
-for j in range(0,tmax, 1/2*dt):
-    for i in range(0, lmax, 1/2*dz):
-        I[i][j+1/2*dt] = c1*(V[i+1/2*dz][j] - V[i-1/2*dz][j]) + c2*I[i][j+1/2*dt]
-        V[i+1/2*dz][j+dt] = c3*(I[i+dz][j+1/2*dt] - I[i][j+1/2*dt]) + c4*V[i+1/2*dz][j]
+for j in range(0, n-1):
+    for i in range(0, k-1):
+        I[2*i][2*j+1] = c1*(V[2*i+1][2*j] - V[2*i-1][2*j]) + c2*I[2*i][2*j+1]
+    for i in range(0, k-1):
+        V[2*i+1][2*(j+1)] = c3*(I[2*(i+1)][2*j+1] - I[2*i][2*j+1]) + c4*V[2*i+1][2*j]
 
 print(I)
 print(V)
