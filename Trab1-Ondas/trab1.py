@@ -1,5 +1,6 @@
 #imports
 import math
+import time
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,6 +13,7 @@ uf = 0.9*c              #Velocidade do sinal de tensão ou corrente
 lmax = 1000             #Valor constante que define o tamanho da malha
 test = 10*lmax/uf       #Valor constante que define o momento de regime estacionário
 tmax = test             #Valor constante que define o tempo máximo na malha
+t1 = lmax/uf            #Tempo de trânsito, em que as ondas alcançam a carga
 G = 0                   #Valor da condutância para linha sem perdas
 R = 0                   #Valor da resistencia para linha sem perdas
 Zo = 50                 #Valor da impedância para z=-lmax
@@ -62,9 +64,12 @@ def main(vs, Rl):
     #Definição da corrente e tensão na malha
     I = np.zeros((2*k, 2*n))
     V = np.zeros((2*k, 2*n))
+    gamac = (Rl - Zo)/(Rl + Zo)
+    gamag = (Rs - Zo)/(Rs + Zo) 
 
-    V[0][0:2*n] = Rl/(Rl + Rs)*vs(0)
-    I[0][0:2*n] = vs(0)/(Rl + Rs)
+    for i in range(0, 2*n):
+        V[0][i] = Zo/(Rs + Zo)*vs(i*2*dt)
+        I[0][i] = vs(i*2*dt)/(Zo + Rs)
 
     #Definição das fórmulas pelo método FDTD
     for j in range(0, 2*n-2):
@@ -82,7 +87,7 @@ def main(vs, Rl):
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    x = np.arange(0,2*k)
+    x = np.arange(0, k*dz, (1/2)*dz)
     for i in range(0, 2*n-1):
         Vx,Vy = retornavet(V, k, n, i)
         ax.plot(x, Vx)
