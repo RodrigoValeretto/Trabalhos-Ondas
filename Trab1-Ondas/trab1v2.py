@@ -1,6 +1,4 @@
 #imports
-import math
-import time
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
@@ -49,6 +47,10 @@ def restr(lmax, tmax, L, C):
         dz = lmax/k
         dt = tmax/n
     return dz,dt,k,n
+
+def animateV(i):
+    line.set_ydata(V[i,:])
+    return line
 
 def main(vs, Rl):
     #Definição da corrente e tensão na malha
@@ -99,42 +101,18 @@ def main(vs, Rl):
     print(V)
     print("*******************************")
 
+    '''    
     fig = plt.figure()
     x = np.arange(0, (k)*dz, dz)
     camera = Camera(fig)
     for i in range(0, n):
-        plt.plot(x, V[i])
+        plt.plot(x, Va[i])
         camera.snap()
     animation = camera.animate()
     plt.show()
     '''
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    line, = ax.plot([], [], lw=3)
 
-    def init():
-        line.set_data([], [])
-        return line
-
-    def animate(i):
-        x = np.arange(0, k*dz, dz)
-        y = V[i][x]
-        line.set_data(x, y)
-        return line
-
-    anim = FuncAnimation(fig, animate, init_func=init, frames=1000, blit=True)
-    plt.show()
-    '''
-
-    return
-    
-    '''
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    x = np.arange(0, k*dz, dz)
-    ax.plot(x, V[3])
-    plt.show()
-    '''
+    return V, I
 
 '''DEFINIÇÃO E PRINT DOS SALTOS, DIVISÕES E CTEs'''
 dz, dt, k, n = restr(lmax, tmax, L, C)
@@ -148,7 +126,17 @@ print("dt =", dt)
 print("*************************************")
 
 '''SCRIPT DO CÓDIGO PRINCIPAL'''
-main(vs1, Rl3)
-main(vs1, Rl2)
-main(vs1, Rl1)
+V, I = main(vs1, Rl3)
+'''PLOT'''
+x = np.linspace(0, lmax, k)
+y = np.linspace(0, lmax, k-1)
+
+fig, ax = plt.subplots()
+line, = ax.plot(x, V[0])
+plt.grid(True)
+anim = FuncAnimation(fig, func=animateV, frames=np.arange(0, n), interval=100, blit=True)
+plt.show()
+
+#main(vs1, Rl2)
+#main(vs1, Rl1)
 

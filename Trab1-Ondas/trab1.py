@@ -1,8 +1,8 @@
 #imports
 import math
 import time
-from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
+from celluloid import Camera 
 import numpy as np
 import random
 #import matplotlib
@@ -53,9 +53,9 @@ def restr(lmax, tmax, L, C):
 def retornavet(X,k,n, j):
     vetx = []
     vety = []
-    for i in range(0, 2*k):
+    for i in range(0, 2*k-1):
         vetx.append(X[i][j])
-    for i in range(0, 2*n):
+    for i in range(0, 2*n-1):
         vety.append(X[j][i])
 
     return vetx, vety
@@ -85,14 +85,24 @@ def main(vs, Rl):
     print(V)
     print("*******************************")
 
-    fig = plt.figure()
+    '''fig = plt.figure()
     ax = fig.add_subplot(111)
     x = np.arange(0, k*dz, (1/2)*dz)
     for i in range(0, 2*n-1):
         Vx,Vy = retornavet(V, k, n, i)
         ax.plot(x, Vx)
-        plt.show()
+        plt.show()'''
     
+    fig = plt.figure()
+    x = np.arange(0, (k)*dz, (1/2)*dz)
+    camera = Camera(fig)
+    for i in range(0, 2*n):
+        Vx, Vy = retornavet(V, k, n, i)
+        plt.plot(x, Vx)
+        camera.snap()
+    animation = camera.animate()
+    plt.show()
+
     return
 
 '''DEFINIÇÃO E PRINT DOS SALTOS, DIVISÕES E CTEs'''
