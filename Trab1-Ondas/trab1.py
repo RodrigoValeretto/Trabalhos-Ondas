@@ -63,16 +63,15 @@ def retornavet(X,k,n, j):
 def main(vs, Rl):
     #Definição da corrente e tensão na malha
     I = np.zeros((2*k, 2*n))
-    V = np.zeros((2*k, 2*n))
+    V = np.zeros((2*k-2, 2*n))
     gamac = (Rl - Zo)/(Rl + Zo)
     gamag = (Rs - Zo)/(Rs + Zo) 
 
-    for i in range(0, 2*n):
-        V[0][i] = Zo/(Rs + Zo)*vs(i*2*dt)
-        I[0][i] = vs(i*2*dt)/(Zo + Rs)
+    V[0][0] = Zo/(Rs + Zo)*vs(i*2*dt)
+    I[0][0] = vs(i*2*dt)/(Zo + Rs)
 
     #Definição das fórmulas pelo método FDTD
-    for j in range(0, 2*n-2):
+    for j in range(2, 2*n-2):
         for i in range(0, 2*k-2):
             I[i][j+1] = c1*(V[i+1][j] - V[i-1][j]) + c2*I[i][j+1]
         for i in range(0, 2*k-2):
