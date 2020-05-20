@@ -9,7 +9,7 @@ from celluloid import Camera
 '''DEFINIÇÃO DAS CONSTANTES DO CÓDIGO'''
 c = 3*(10**8)           #Valor constante que representa a velocidade da luz no vácuo
 uf = 0.9*c              #Velocidade do sinal de tensão ou corrente
-lmax = 1000             #Valor constante que define o tamanho da malha
+lmax = 30000             #Valor constante que define o tamanho da malha
 test = 10*lmax/uf       #Valor constante que define o momento de regime estacionário
 tmax = test             #Valor constante que define o tempo máximo na malha
 t1 = lmax/uf            #Tempo de trânsito, em que as ondas alcançam a carga
@@ -22,6 +22,7 @@ Rs = 75                 #Valor da resistência da fonte especificada
 Rl1 = np.inf            #Valor da carga no caso 1
 Rl2 = 0                 #Valor da carga no caso 2
 Rl3 = 100               #Valor da carga no caso 3
+k = 100
 
 '''DEFINIÇÃO DE FUNÇÕES UTILIZADAS'''
 def u(t):               #Definição da função degrau de t
@@ -34,23 +35,22 @@ def vs1(t):              #Definição da função vs1 de t
     return 2*u(t)
 
 def vs2(t):              #Definição da função vs2 de t
-    return u(t) - u(t-lmax/(10*0.9*c))
+    return u(t) - u(t-lmax/(10*uf))
 
-def restr(lmax, tmax, L, C):
-    k = random.randint(10, 200)
-    n = random.randint(10, 200)
+def restr():
     dz = lmax/k
-    dt = tmax/n
-    while dt > dz/uf:
-        k = random.randint(10, 200)
-        n = random.randint(10, 200)
-        dz = lmax/k
-        dt = tmax/n
-    return dz,dt,k,n
+    dt = dz/uf
+    dt = dt*0.8
+    n = int(tmax/dt)
+    return dz,dt,n
 
 def animateV(i):
     line.set_ydata(V[i,:])
-    return line
+    return line,
+
+def animateI(i):
+    line2.set_ydata(I[i,:])
+    return line2,
 
 def main(vs, Rl):
     #Definição da corrente e tensão na malha
@@ -66,18 +66,14 @@ def main(vs, Rl):
         c2 = 0
     else:
         c2 = (2*dt)/(Rl*C*dz)
-    c3 = (dt**2)/(L*C*(dz)**2)
+    c3 = (dt**2)/(L*C*(dz**2))
 
     '''CONDIÇÕES DE CONTORNO E INICIAIS'''
     V[0][0] = Zo/(Rs + Zo)*vs(0)
     I[0][0] = vs(0)/(Zo + Rs)
 
     Va[0][0] = C*(dz/dt)*V[0][0]
-
-    for i in range(1, k):
-        Va[0][i] = 0
-    for i in range(1, k-1):
-        I[0][i] = 0
+    #Va[0, 0] = V[0, 0]
 
     for i in range(1, n):
         Va[i][0] = (1 - c1)*Va[i-1][0] - 2*I[i-1][0] + 2/Rs*vs((n-1)*dt)
@@ -112,10 +108,10 @@ def main(vs, Rl):
     plt.show()
     '''
 
-    return V, I
+    return Va, I
 
 '''DEFINIÇÃO E PRINT DOS SALTOS, DIVISÕES E CTEs'''
-dz, dt, k, n = restr(lmax, tmax, L, C)
+dz, dt, n = restr()
 print("***Condições e limites do programa***")
 print("L =", L)
 print("C =", C)
@@ -134,9 +130,20 @@ y = np.linspace(0, lmax, k-1)
 fig, ax = plt.subplots()
 line, = ax.plot(x, V[0])
 plt.grid(True)
+plt.xlim(-5, lmax+5)
+plt.ylim(-0.3,0.3)
+plt.title("Tensão")
 anim = FuncAnimation(fig, func=animateV, frames=np.arange(0, n), interval=100, blit=True)
-plt.show()
 
+fig2, ax2 = plt.subplots()
+line2, = ax2.plot(y, I[0])
+plt.grid(True)
+plt.xlim(-5, lmax+5)
+plt.ylim(-1,1)
+plt.title("Corrente")
+anim = FuncAnimation(fig2, func=animateI, frames=np.arange(0, n), interval=100, blit=True)
+
+plt.show()
 #main(vs1, Rl2)
 #main(vs1, Rl1)
 
