@@ -2,15 +2,13 @@
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
-import random
-from celluloid import Camera
 #import matplotlib
 
 '''DEFINIÇÃO DAS CONSTANTES DO CÓDIGO'''
 c = 3*(10**8)           #Valor constante que representa a velocidade da luz no vácuo
 uf = 0.9*c              #Velocidade do sinal de tensão ou corrente
 lmax = 30000             #Valor constante que define o tamanho da malha
-test = 10*lmax/uf       #Valor constante que define o momento de regime estacionário
+test = (10+0.5)*lmax/uf       #Valor constante que define o momento de regime estacionário
 tmax = test             #Valor constante que define o tempo máximo na malha
 t1 = lmax/uf            #Tempo de trânsito, em que as ondas alcançam a carga
 G = 0                   #Valor da condutância para linha sem perdas
@@ -40,7 +38,7 @@ def vs2(t):              #Definição da função vs2 de t
 def restr():
     dz = lmax/k
     dt = dz/uf
-    dt = dt*0.8
+    dt = dt*0.5
     n = int(tmax/dt)
     return dz,dt,n
 
@@ -69,32 +67,32 @@ def main(vs, Rl):
     c3 = (dt**2)/(L*C*(dz**2))
 
     '''CONDIÇÕES DE CONTORNO E INICIAIS'''
-    V[0][0] = Zo/(Rs + Zo)*vs(0)
-    I[0][0] = vs(0)/(Zo + Rs)
+    V[0, 0] = (Zo/(Rs + Zo))*vs(0)
+    I[0, 0] = vs(0)/(Zo + Rs)
 
-    Va[0][0] = C*(dz/dt)*V[0][0]
-    #Va[0, 0] = V[0, 0]
-
-    for i in range(1, n):
-        Va[i][0] = (1 - c1)*Va[i-1][0] - 2*I[i-1][0] + 2/Rs*vs((n-1)*dt)
-        Va[i][k-1] = (1 - c2)*Va[i-1][k-1] + 2*I[i-1][k-2]
+    #Va[0, 0] = C*(dz/dt)*V[0, 0]
+    Va[0, 0] = V[0, 0]
 
     '''INICIO DAS ITERAÇÕES'''
     for j in range(1, n):
-        for i in range(1, k-1):
-            Va[j][i] = Va[j-1][i] - (I[j-1][i] - I[j-1][i-1])
-        for i in range(0, k-1):
-            I[j][i] = I[j-1][i] - c3*(Va[j][i+1] - Va[j][i])
+        Va[j, 0] = (1 - c1)*Va[j-1, 0] - 2*I[j-1, 0] + (2/Rs)*vs((j-1)*dt)
 
-    for j in range(0, n):
+        Va[j, k-1] = (1 - c2)*Va[j-1, k-1] + 2*I[j-1, k-2]
+
+        for i in range(1, k-1):
+            Va[j, i] = Va[j-1, i] - (I[j-1, i] - I[j-1, i-1])
+        for i in range(0, k-1):
+            I[j, i] = I[j-1, i] - c3*(Va[j, i+1] - Va[j, i])
+
+    '''for j in range(0, n):
         for i in range(0, k):
-            V[j][i] = (dt/(C*dz))*Va[j][i]
+            V[j, i] = (dt/(C*dz))*Va[j, i]'''
 
     print("***Print da matriz de corrente***")
     print(I)
     print("*********************************")
     print("***Print da matriz de tensão***")
-    print(V)
+    print(Va)
     print("*******************************")
 
     '''    
@@ -131,7 +129,7 @@ fig, ax = plt.subplots()
 line, = ax.plot(x, V[0])
 plt.grid(True)
 plt.xlim(-5, lmax+5)
-plt.ylim(-0.3,0.3)
+plt.ylim(-0.2,0.2)
 plt.title("Tensão")
 anim = FuncAnimation(fig, func=animateV, frames=np.arange(0, n), interval=100, blit=True)
 
@@ -139,7 +137,7 @@ fig2, ax2 = plt.subplots()
 line2, = ax2.plot(y, I[0])
 plt.grid(True)
 plt.xlim(-5, lmax+5)
-plt.ylim(-1,1)
+plt.ylim(-0.2,0.2)
 plt.title("Corrente")
 anim = FuncAnimation(fig2, func=animateI, frames=np.arange(0, n), interval=100, blit=True)
 
