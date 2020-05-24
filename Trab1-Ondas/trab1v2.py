@@ -1,3 +1,12 @@
+'''
+Codigo referente ao trabalho 1 da disciplina de Ondas
+Eletromagnéticas - SEL0612
+Alunos responsáveis:
+Rodrigo Augusto Valeretto       NUSP:10684792
+Leonardo Cerce Guioto           NUSP:10716640
+João Pedro Borges de Castro     NUSP:10276720
+'''
+
 #imports
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
