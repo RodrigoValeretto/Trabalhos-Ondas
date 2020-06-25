@@ -25,9 +25,9 @@ def zeta(N):
 
 def calcAt(N):
     if N >= Nt:
-        return 1
+        return 0
     else:
-        return -zeta(N) - np.sqrt(zeta(N)**2 - 1)
+        return -np.log(-zeta(N) - np.sqrt(zeta(N)**2 - 1))
 
 '''Calculo dos valores da velocidade de fase e da cte de atenuação'''
 N = 1
