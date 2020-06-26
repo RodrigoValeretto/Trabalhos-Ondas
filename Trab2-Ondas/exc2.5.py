@@ -3,13 +3,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-S = 1/np.sqrt(2)
-#S = 0.5
+S = 0.5
 Nt = (2*np.pi*S)/(np.arccos(1-2*(S**2)))
 c = sp.speed_of_light
-lmax = 10
-lmin = 1
-jump = 0.2
+lmax = 80
+lmin = 3
+jump = 0.1
 R1 = []
 R2 = []
 
@@ -30,21 +29,16 @@ def calcAt(N):
         return -np.log(-zeta(N) - np.sqrt(zeta(N)**2 - 1))
 
 '''Calculo dos valores da velocidade de fase e da cte de atenuação'''
-N = 1
+N = lmin
 while N <= lmax:
-    R1.append(calcVtil(N)/c)
-    R2.append(calcAt(N))
+    R1.append((1-calcVtil(N)/c)*100)
     N += jump
 
 '''PLOT DOS RESULTADOS'''
 N = np.arange(lmin,lmax + jump, jump)
 
-fig, ax = plt.subplots(1,2)
-ax[0].plot(N, R1)
-ax[1].plot(N, R2)
-ax[0].grid(True)
-ax[1].grid(True)
-ax[0].set_title("Velocidade de fase normalizada")
-ax[1].set_title("Cte de atenuação")
+plt.plot(N, R1)
+plt.grid(True)
+plt.title("Porcentagem da Velocidade de fase relatica a velocidade da luz")
 plt.show()
 
