@@ -3,27 +3,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Definição das constantes do exc
-S1 = 1
-S2 = 0.99
-S3 = 0.5
-K = 200                          # Número de divisões do espaço livre
-N1 = int(K/S1)                 # Número de divisões do tempo
-N2 = int(K/S2)                 # Número de divisões do tempo
-N3 = int(K/S3)                 # Número de divisões do tempo
-Nd1 = int(160/S1)                # N desejado para fazer o plot
-Nd2 = int(160/S2)                # N desejado para fazer o plot
-Nd3 = int(160/S3)                # N desejado para fazer o plot
+S1 = 1                          # Constante de courant para o primeiro plot
+S2 = 0.99                       # Constante de courant para o segundo plot
+S3 = 0.5                        # Constante de courant para o terceiro plot
+K = 200                         # Número de divisões do espaço livre
+Nd = 160                         # N desejado
+N1 = int(K/S1)                  # Número de divisões do tempo
+N2 = int(K/S2)                  # Número de divisões do tempo
+N3 = int(K/S3)                  # Número de divisões do tempo
+Nd1 = int(Nd/S1)                # N desejado para fazer o plot 1
+Nd2 = int(Nd/S2)                # N desejado para fazer o plot 2
+Nd3 = int(Nd/S3)                # N desejado para fazer o plot 3
 
-def func(n, S):
+def func(n, S, N):
     if n > 40/S:
         return 0
     else:
-        return 1
+        return np.exp(-((((n-60)/20)**2)))
 
 def calcWavef(U, S, N):
     # Definição dos valores iniciais
     for n in range(0, N):
-        U[n, 0] = func(n, S)
+        U[n, 0] = func(n, S, N)
     
     for i in range(0, K):
         U[0, i] = 0
@@ -62,4 +63,10 @@ ax[2].set_title("Wavefunction para S = " + str(S3))
 ax[2].set_ylabel("Wavefunction U(i)")
 ax[2].set_xlabel("Coordenada i do grid")
 
+'''
+X = []
+for i in range(0,40):
+    X.append(func(i,0,0))
+plt.plot(range(0,40), X)
+'''
 plt.show()
