@@ -44,5 +44,5 @@ N = np.arange(lmin, lmax + jump, jump)
 
 plt.plot(N, R1)
 plt.grid(True)
-plt.title("Porcentagem da Velocidade de fase relatica a velocidade da luz")
+plt.title("Porcentagem da Velocidade de fase relativa a velocidade da luz")
 plt.show()

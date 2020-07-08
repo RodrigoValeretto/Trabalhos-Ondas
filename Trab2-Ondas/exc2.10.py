@@ -12,10 +12,10 @@ Nd3 = 220                  # N desejado 3
 
 
 def func(n, S):
-    if n > 220/S:
+    if n > 120/S:
         return 0
     else:
-        return np.exp(-((((n-50/S)/(20/S))**2)))
+        return np.exp(-((((n-60)/(20))**2)))
 
 
 def calcWavef(U, S, N):
@@ -35,26 +35,48 @@ def calcWavef(U, S, N):
 
 # SCRIPT PRINCIPAL
 U = np.zeros((N+1, K+1))      # Função de onda U1 no tempo n, no espaço i
-gI = np.arange(0, K, 1)     # Definição do grid i
-fig, ax = plt.subplots(1, 3, sharey=True)
+gI = np.arange(0, K, 1)       # Definição do grid i
+gI2 = np.arange(0, 20, 1)     # Definição do grid com apenas 20 celulas
+fig, ax = plt.subplots(2, 3)
 U = calcWavef(U, S, N)
 
-ax[0].plot(gI, U[Nd1, gI])
-ax[0].grid(True)
-ax[0].set_title("Wavefunction para S = " + str(S) + " e n = " + str(Nd1))
-ax[0].set_ylabel("Wavefunction U(i)")
-ax[0].set_xlabel("Coordenada i do grid")
+ax[0, 0].plot(gI, U[Nd1, gI])
+ax[0, 0].grid(True)
+ax[0, 0].set_title("Wavefunction para S = " + str(S) + " e n = " + str(Nd1))
+ax[0, 0].set_ylabel("Wavefunction U(i)")
+ax[0, 0].set_ylim(-0.2, 1.2)
 
-ax[1].plot(gI, U[Nd2, gI], color='orange')
-ax[1].grid(True)
-ax[1].set_title("Wavefunction para S = " + str(S) + " e n = " + str(Nd2))
-ax[1].set_ylabel("Wavefunction U(i)")
-ax[1].set_xlabel("Coordenada i do grid")
+ax[0, 1].plot(gI, U[Nd2, gI], color='orange')
+ax[0, 1].grid(True)
+ax[0, 1].set_title("Wavefunction para S = " + str(S) + " e n = " + str(Nd2))
+ax[0, 1].set_ylabel("Wavefunction U(i)")
+ax[0, 1].set_ylim(-0.2, 1.2)
 
-ax[2].plot(gI, U[Nd3, gI], color='purple')
-ax[2].grid(True)
-ax[2].set_title("Wavefunction para S = " + str(S) + " e n = " + str(Nd3))
-ax[2].set_ylabel("Wavefunction U(i)")
-ax[2].set_xlabel("Coordenada i do grid")
+ax[0, 2].plot(gI, U[Nd3, gI], color='purple')
+ax[0, 2].grid(True)
+ax[0, 2].set_title("Wavefunction para S = " + str(S) + " e n = " + str(Nd3))
+ax[0, 2].set_ylabel("Wavefunction U(i)")
+ax[0, 2].set_ylim(-0.2, 1.2)
+
+ax[1, 0].plot(gI2, U[Nd1, gI2])
+ax[1, 0].grid(True)
+ax[1, 0].set_title("Zoom para S = " + str(S) + " e n = " + str(Nd1))
+ax[1, 0].set_ylabel("Wavefunction U(i)")
+ax[1, 0].set_xlabel("Coordenada i do grid")
+ax[1, 0].set_ylim(-0.05, 0.05)
+
+ax[1, 1].plot(gI2, U[Nd2, gI2], color='orange')
+ax[1, 1].grid(True)
+ax[1, 1].set_title("Zoom para S = " + str(S) + " e n = " + str(Nd1))
+ax[1, 1].set_ylabel("Wavefunction U(i)")
+ax[1, 1].set_xlabel("Coordenada i do grid")
+ax[1, 1].set_ylim(-0.05, 0.05)
+
+ax[1, 2].plot(gI2, U[Nd3, gI2], color='purple')
+ax[1, 2].grid(True)
+ax[1, 2].set_title("Zoom para S = " + str(S) + " e n = " + str(Nd1))
+ax[1, 2].set_ylabel("Wavefunction U(i)")
+ax[1, 2].set_xlabel("Coordenada i do grid")
+ax[1, 2].set_ylim(-0.05, 0.05)
 
 plt.show()
