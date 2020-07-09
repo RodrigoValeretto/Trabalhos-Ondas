@@ -13,9 +13,9 @@ d = 10
 dt = d/(c*np.sqrt(2))
 
 # Cálculo das ctes
-Jz = 1
-Mx = 1
-My = 1
+Jz = 0
+Mx = 0
+My = 0
 Ca = (1 - sigma*dt/(2*epsilon))/(1 + sigma*dt/(2*epsilon))
 Cb = (dt/(epsilon*d))/(1 + sigma*dt/(2*epsilon))
 Da = (1 - sigma*dt/(2*mi))/(1 + sigma*dt/(2*mi))
