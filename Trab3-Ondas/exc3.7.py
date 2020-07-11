@@ -52,10 +52,10 @@ def YEE_2D(Ez, Hx, Hy):
                      Hx[n, i-1, j] - Hx[n, i-1, j+1] - Jz*d)
 
                 Hx[n+1, i-1, j+1] = Da*Hx[n, i-1, j+1] + Db * \
-                    (Ez[n+1, i-1, j+1] - Ez[n+1, i-1, j+3] - Mx*d)
+                    (Ez[n+1, i+1, j+1] - Ez[n+1, i, j] - Mx*d)
 
                 Hy[n+1, i, j+1] = Da*Hy[n, i, j+1] + Db * \
-                    (Ez[n+1, i+1, j+1] - Ez[n+1, i-1, j+1] - My*d)
+                    (Ez[n+1, i+1, j+1] - Ez[n+1, i, j] - My*d)
     return Ez, Hx, Hy
 
 
