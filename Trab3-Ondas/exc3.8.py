@@ -110,7 +110,9 @@ def update_plot(frame_number, zarray, plot):
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 plot = [ax.plot_surface(x, y, zarray[0, :, :], rstride=3, cstride=3)]
-#ax.set_zlim(-1, 1)
+ax.set_xlabel("Grid X")
+ax.set_ylabel("Grid Y")
+ax.set_zlabel("F(n, x, y)")
 
 ani = animation.FuncAnimation(
     fig, update_plot, N, fargs=(zarray, plot), interval=500/fps)
