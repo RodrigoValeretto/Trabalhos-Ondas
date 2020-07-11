@@ -69,7 +69,7 @@ def YEE_2D(Ez, Hx, Hy):
                     (Hy[n, i, j] - Hy[n, i-1, j] +
                      Hx[n, i, j-1] - Hx[n, i, j] - Jz*d)
         Ez[n, int(I/2), int(J/2)] = unit_step(n)
-
+        # Altere a função acima para a que desejar
     for n in range(0, N+1):
         for i in range(I+1):
             Ez[n, i, J] = 0
@@ -81,9 +81,10 @@ def YEE_2D(Ez, Hx, Hy):
     return Ez, Hx, Hy
 
 
-Ez = np.zeros((N+1, I+1, J+1))      # Saltos n = 1/2, i = 1/2, j = 1/2
-Hx = np.zeros((N+1, I+1, J+1))      # Saltos n = 1, i = 1/2, j = 1
-Hy = np.zeros((N+1, I+1, J+1))      # Saltos n = 1, i = 1, j = 1/2
+# Script principal
+Ez = np.zeros((N+1, I+1, J+1))      
+Hx = np.zeros((N+1, I+1, J+1))     
+Hy = np.zeros((N+1, I+1, J+1))    
 
 Ez, Hx, Hy = YEE_2D(Ez, Hx, Hy)
 
