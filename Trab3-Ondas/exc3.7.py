@@ -35,10 +35,21 @@ def unit_step(n):
         return 0
 
 
+def impulse(n):
+    if n == 0:
+        return 1
+    else:
+        return 0
+
+
+def senoide(n):
+    return np.sin(10*np.pi/N * n)
+
+
 def YEE_2D(Ez, Hx, Hy):
-    for n in range(1, N-1):
-        for i in range(1, I-1):
-            for j in range(1, J-1):
+    for n in range(0, N):
+        for i in range(0, I):
+            for j in range(0, J):
                 Hx[n, i, j] = Da*Hx[n-1, i, j] + Db * \
                     (Ez[n-1, i, j] - Ez[n-1, i, j+1] - Mx*d)
 
@@ -48,21 +59,22 @@ def YEE_2D(Ez, Hx, Hy):
                 Ez[n, i, j] = Ca*Ez[n-1, i, j] + Cb * \
                     (Hy[n, i, j] - Hy[n, i-1, j] +
                      Hx[n, i, j-1] - Hx[n, i, j] - Jz*d)
-
         Ez[n, int(I/2), int(J/2)] = unit_step(n)
+
+    for n in range(0, N+1):
         for i in range(I+1):
-            Ez[n, i, J-1] = 0
+            Ez[n, i, J] = 0
             Ez[n, i, 0] = 0
         for j in range(J+1):
-            Ez[n, I-1, j] = 0
+            Ez[n, I, j] = 0
             Ez[n, 0, j] = 0
 
     return Ez, Hx, Hy
 
 
-Ez = np.empty((N+1, I+1, J+1))      # Saltos n = 1/2, i = 1/2, j = 1/2
-Hx = np.empty((N+1, I+1, J+1))      # Saltos n = 1, i = 1/2, j = 1
-Hy = np.empty((N+1, I+1, J+1))      # Saltos n = 1, i = 1, j = 1/2
+Ez = np.zeros((N+1, I+1, J+1))      # Saltos n = 1/2, i = 1/2, j = 1/2
+Hx = np.zeros((N+1, I+1, J+1))      # Saltos n = 1, i = 1/2, j = 1
+Hy = np.zeros((N+1, I+1, J+1))      # Saltos n = 1, i = 1, j = 1/2
 
 Ez, Hx, Hy = YEE_2D(Ez, Hx, Hy)
 
@@ -71,7 +83,7 @@ fps = 30  # frame per sec
 x = np.linspace(0, d*I, I)
 y = np.linspace(0, d*J, J)
 x, y = np.meshgrid(x, y)
-zarray = np.empty((N, I, J))
+zarray = np.zeros((N, I, J))
 
 for n in range(N):
     for i in range(I):
@@ -90,6 +102,9 @@ fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 plot = [ax.plot_surface(x, y, zarray[0, :, :], rstride=3, cstride=3)]
 ax.set_zlim(-1, 1)
+ax.set_xlabel("Grid X")
+ax.set_ylabel("Grid Y")
+ax.set_zlabel("F(n, x, y)")
 
 ani = animation.FuncAnimation(
     fig, update_plot, N, fargs=(zarray, plot), interval=500/fps)
