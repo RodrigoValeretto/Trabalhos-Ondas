@@ -4,9 +4,15 @@ import scipy.constants as sp
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.animation as animation
 
+# Para esse exercicio deve-se mudar o valor do sigmaMax
+# Alguns sigmas encontrados na internet são:
+# Mercurio = 1.0044,
+# Grafite = 0.07
+# Nicromo = 0.909
+
 # Declaração de ctes
 c = sp.speed_of_light
-sigma = 0
+sigmaMax = 0.07
 mi = sp.mu_0  # 4*np.pi*(10**(-7))
 epsilon = sp.epsilon_0  # 1/(mi*(c**2))
 N = 150
@@ -17,6 +23,7 @@ dt = d/(c*np.sqrt(2))
 X = d*I
 Y = d*J
 T = dt*N
+sigma = np.linspace(0, sigmaMax, N)
 
 # Cálculo das ctes
 Jz = 0
@@ -39,13 +46,13 @@ def YEE_2D(Ez, Hx, Hy):
     for n in range(1, N-1):
         for i in range(1, I-1):
             for j in range(1, J-1):
-                Hx[n, i, j] = Da*Hx[n-1, i, j] + Db * \
+                Hx[n, i, j] = Da[n]*Hx[n-1, i, j] + Db[n] * \
                     (Ez[n-1, i, j] - Ez[n-1, i, j+1] - Mx*d)
 
-                Hy[n, i, j] = Da*Hy[n-1, i, j] + Db * \
+                Hy[n, i, j] = Da[n]*Hy[n-1, i, j] + Db[n] * \
                     (Ez[n-1, i+1, j] - Ez[n-1, i, j] - My*d)
 
-                Ez[n, i, j] = Ca*Ez[n-1, i, j] + Cb * \
+                Ez[n, i, j] = Ca[n]*Ez[n-1, i, j] + Cb[n] * \
                     (Hy[n, i, j] - Hy[n, i-1, j] +
                      Hx[n, i, j-1] - Hx[n, i, j] - Jz*d)
 
@@ -89,7 +96,7 @@ def update_plot(frame_number, zarray, plot):
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 plot = [ax.plot_surface(x, y, zarray[0, :, :], rstride=3, cstride=3)]
-ax.set_zlim(-1, 1)
+#ax.set_zlim(-1, 1)
 
 ani = animation.FuncAnimation(
     fig, update_plot, N, fargs=(zarray, plot), interval=500/fps)
