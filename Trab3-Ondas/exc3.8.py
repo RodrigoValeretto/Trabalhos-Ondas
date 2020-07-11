@@ -6,13 +6,16 @@ import matplotlib.animation as animation
 
 # Para esse exercicio deve-se mudar o valor do sigmaMax
 # Alguns sigmas encontrados na internet são:
-# Mercurio = 1.0044,
-# Grafite = 0.07
-# Nicromo = 0.909
+# Madeira umida = 10^(-3)
+# Agua destilada = 5.5*10^(-6)
+# Vacuo = 0
+# Como é pedido nos exercicios, é feita
+# uma variação de sigma, assim é possivel
+# observar a atenuação ocorrendo em cada caso
 
 # Declaração de ctes
 c = sp.speed_of_light
-sigmaMax = 0.07
+sigma = 10**(-3)
 mi = sp.mu_0  # 4*np.pi*(10**(-7))
 epsilon = sp.epsilon_0  # 1/(mi*(c**2))
 N = 150
@@ -23,7 +26,6 @@ dt = d/(c*np.sqrt(2))
 X = d*I
 Y = d*J
 T = dt*N
-sigma = np.linspace(0, sigmaMax, N)
 
 # Cálculo das ctes
 Jz = 0
@@ -46,13 +48,13 @@ def YEE_2D(Ez, Hx, Hy):
     for n in range(1, N-1):
         for i in range(1, I-1):
             for j in range(1, J-1):
-                Hx[n, i, j] = Da[n]*Hx[n-1, i, j] + Db[n] * \
+                Hx[n, i, j] = Da*Hx[n-1, i, j] + Db * \
                     (Ez[n-1, i, j] - Ez[n-1, i, j+1] - Mx*d)
 
-                Hy[n, i, j] = Da[n]*Hy[n-1, i, j] + Db[n] * \
+                Hy[n, i, j] = Da*Hy[n-1, i, j] + Db * \
                     (Ez[n-1, i+1, j] - Ez[n-1, i, j] - My*d)
 
-                Ez[n, i, j] = Ca[n]*Ez[n-1, i, j] + Cb[n] * \
+                Ez[n, i, j] = Ca*Ez[n-1, i, j] + Cb * \
                     (Hy[n, i, j] - Hy[n, i-1, j] +
                      Hx[n, i, j-1] - Hx[n, i, j] - Jz*d)
 

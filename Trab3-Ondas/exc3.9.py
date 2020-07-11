@@ -41,7 +41,7 @@ def YEE_2D(Ez, Hx, Hy):
             for j in range(1, J):
                 Hx[n, i, j] = Da*Hx[n-1, i, j] + Db * \
                     (Ez[n-1, i, j] - Ez[n-1, i, j+1] - Mx*d)
-                
+
                 Hy[n, i, j] = Da*Hy[n-1, i, j] + Db * \
                     (Ez[n-1, i+1, j] - Ez[n-1, i, j] - My*d)
 

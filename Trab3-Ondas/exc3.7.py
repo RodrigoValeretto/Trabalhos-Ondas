@@ -60,9 +60,9 @@ def YEE_2D(Ez, Hx, Hy):
     return Ez, Hx, Hy
 
 
-Ez = np.zeros((N+1, I+1, J+1))      # Saltos n = 1/2, i = 1/2, j = 1/2
-Hx = np.zeros((N+1, I+1, J+1))      # Saltos n = 1, i = 1/2, j = 1
-Hy = np.zeros((N+1, I+1, J+1))      # Saltos n = 1, i = 1, j = 1/2
+Ez = np.empty((N+1, I+1, J+1))      # Saltos n = 1/2, i = 1/2, j = 1/2
+Hx = np.empty((N+1, I+1, J+1))      # Saltos n = 1, i = 1/2, j = 1
+Hy = np.empty((N+1, I+1, J+1))      # Saltos n = 1, i = 1, j = 1/2
 
 Ez, Hx, Hy = YEE_2D(Ez, Hx, Hy)
 
@@ -71,7 +71,7 @@ fps = 30  # frame per sec
 x = np.linspace(0, d*I, I)
 y = np.linspace(0, d*J, J)
 x, y = np.meshgrid(x, y)
-zarray = np.zeros((N, I, J))
+zarray = np.empty((N, I, J))
 
 for n in range(N):
     for i in range(I):
