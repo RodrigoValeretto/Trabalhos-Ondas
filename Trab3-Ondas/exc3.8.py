@@ -4,7 +4,7 @@ import scipy.constants as sp
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.animation as animation
 
-# Para esse exercicio deve-se mudar o valor do sigmaMax
+# Para esse exercicio deve-se mudar o valor do sigma
 # Alguns sigmas encontrados na internet são:
 # Madeira umida = 10^(-3)
 # Agua destilada = 5.5*10^(-6)
